@@ -12,7 +12,7 @@ services:
     working_dir: /work
     environment:
       - DB_CONNECTION=mysql
-      - DB_HOST=db
+      - DB_HOST=${DB_HOST}
       - DB_DATABASE=${DB_NAME}
       - DB_USERNAME=${DB_USER}
       - DB_PASSWORD=${DB_PASS}
@@ -29,28 +29,5 @@ services:
       - ./docker/nginx/:/etc/nginx/conf.d
     environment:
       - TZ=${TZ}
-  db:
-    build: ./docker/mysql
-    volumes:
-      - db-store:/var/lib/mysql-files
-      - ./logs:/var/log/mysql
-      - ./mysql/conf.d:/etc/mysql/conf.d
-    environment:
-      - MYSQL_DATABASE=${DB_NAME}
-      - MYSQL_USER=${DB_USER}
-      - MYSQL_PASSWORD=${DB_PASS}
-      - MYSQL_ROOT_PASSWORD=${DB_PASS}
-      - TZ=${TZ}
-    ports:
-      - "3306:3306"
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    restart: always
-    ports: ["4040:80"]
-    depends_on: ["db"]
-    volumes:
-      - ./phpmyadmin/sessions:/sessions
-
 volumes:
   db-store:
